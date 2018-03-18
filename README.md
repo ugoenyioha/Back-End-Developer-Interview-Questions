@@ -82,9 +82,20 @@ Active record has problems with testability. Because databse interaction and app
 An active record pattern also, due to strong coupling of database interaction violates the single responsibility principle and separations of concerns. If you think about it, a naively implemented active record pattern will also contain business logic - and this monstrocity now contains business logic as well as persistence. Compared to a multi-teir architecture this is difficult to reason about or refactor as knowledge about the business domain improves. It's also more difficult to adapt these active records to changing data teir requirements. Because of this, the active  record pattern is best and most employed in simple applications that are forms over data with CRUD functionality - or only as one part of an architecture, the data teir. 
 
 
+
 * Data-Mapper is a design pattern that promotes the use of a layer of Mappers that moves data between objects and a database while keeping them independent of each other and the mapper itself. On the contrary, in Active-Record objects directly incorporate operations for persisting themselves to a database, and properties corresponding to the underlying database tables. Do you have an opinion on those patterns? When would you use one against the other?
 
+Active record's pros and cons were discussed above. Here we'll discuss Data Mapper, discuss the differences between both and compare + contrast. 
 
+Unlike Active Record data mapper acts a layer between the business domain of the application and the database that persists data. While active record seeks to invisibly bridge the gaps between the two as seemlessly as possible, the role of the data mapper is to allow you explicitly consider the two more independently. Hibernate is an example of the data mapper patter.
+
+Pros
+. Allows for greater flexibility betw4een the domain and the database. If you have less control over the database schema, this might be a good idea.
+. Can be more performant. Because there is no layer of abstraction and indirection between domain objects and the database, there is more opportuity to have the data mapper make more efficient use fo the database. 
+
+Cons.
+. Hard to setup. Active Record is designed to be simple to introduce with little configuration from the end user. With Data Mapper, the user has to invest more effort and think harder about how to configure the data mapping. 
+. 
 
 * Why it is often said that the introduction of `null` is a "Billion dollar mistake"? Would you discuss the techniques to avoid it, such as the Null Object Pattern introduced by the GOF book, or Option types?
 
