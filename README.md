@@ -48,20 +48,71 @@ Sooner or later I will complete it with the relative answers. Feel free to contr
 
 ### [[↑]](#toc) <a name='patterns'>Questions about Design Patterns:</a>
 
-* Why are global and static objects evil? Can you show it with a code example?
-* Tell me about Inversion of Control and how does it improve the design of code.
-* The Law of Demeter (the Principle of Least Knowledge) states that each unit should have only limited knowledge about other units and it should only talk to its immediate friends (sometimes stated as "Don't talk to strangers"). Would you write code violating this principle, show why it is a bad design and then fix it?
-* Active-Record is the design pattern that promotes objects to include functions such as Insert, Update, and Delete, and properties that correspond to the columns in some underlying database table. In your opinion and experience, which are the limits and pitfalls of the this pattern?
+Q: Why are global and static objects evil? Can you show it with a code example?
+
+A: Static varables represent global state - even if encapsulated in an object. It's hard to reason about and test code using static variables. The reason is any other code could be modifying the variable and so it's difficult to reason about its current state. 
+
+Prefer the singleton design pattern over static. It's easier to transform from a singleton to multiple objects vs using static variables. 
+
+Q: Tell me about Inversion of Control and how does it improve the design of code.
+A: Inversion of control is a design principle in which custom written portions of a computer program receive the flow of control from a generic framework. This is different from traditional procedural programming where the custom code calls reusable libraries to take care of generic tasks. 
+
+Inversion of control increses the modularity of software, making it more extensible than the former traditional approach. You see inversion of control approaches in many popular windowing and application development frameworks today. IoS, Windows API, Android etc all feature the use of inversion of control as the core programming pardigm.
+
+#### Implmentation Techniques
+. Service Locator Pattern
+. Dependency Injection
+. Template method design pattern
+. Strategy design pattern
+
+Q: The Law of Demeter (the Principle of Least Knowledge or LoD) states that each unit should have only limited knowledge about other units and it should only talk to its immediate friends (sometimes stated as "Don't talk to strangers"). Would you write code violating this principle, show why it is a bad design and then fix it?
+A: The law of Demeter is succintly summarized as "when one wants a dog to walk, one does not command the dogs legs to walk directly; instead pme commands the dog which then commands its own legs"
+
+its advantage includes the resulting software tends to be more maintainable or adaptible since the caller does not meed to understand the internal structure of other objects. 
+
+The problem adhering to the LoD is it leads to narrow interfaces. In order to complete any non-trivial activity, you will need to create wrapping methods to call collections of functions togrether. Sometimes this will add noticable time and space overhead to the binaries.
+
+
+Q: Active-Record is the design pattern that promotes objects to include functions such as Insert, Update, and Delete, and properties that correspond to the columns in some underlying database table. In your opinion and experience, which are the limits and pitfalls of the this pattern?
+
+A: The active record pattern is an architectural pattern found in software that stores in-memory object data in relational databases. It's an approach to accessing data in a database. A database table or vieew is wrapped into a class. The object instance represents a single row in the table. After creation of the object a new row is added to the table upon save. Updated objects also update rows in the table. The wrapping class also implements accessor methods (insert, update, delete) for the table or view.
+
+Active record has problems with testability. Because databse interaction and application logic is coupled to the object, testing an active record object without a database becomes difficult. These negative effects can be managed by mocking or via dependency injection frameworks to substitute the real data teir with a similated one.
+
+An active record pattern also, due to strong coupling of database interaction violates the single responsibility principle and separations of concerns. If you think about it, a naively implemented active record pattern will also contain business logic - and this monstrocity now contains business logic as well as persistence. Compared to a multi-teir architecture this is difficult to reason about or refactor as knowledge about the business domain improves. It's also more difficult to adapt these active records to changing data teir requirements. Because of this, the active  record pattern is best and most employed in simple applications that are forms over data with CRUD functionality - or only as one part of an architecture, the data teir. 
+
+
 * Data-Mapper is a design pattern that promotes the use of a layer of Mappers that moves data between objects and a database while keeping them independent of each other and the mapper itself. On the contrary, in Active-Record objects directly incorporate operations for persisting themselves to a database, and properties corresponding to the underlying database tables. Do you have an opinion on those patterns? When would you use one against the other?
+
+
+
 * Why it is often said that the introduction of `null` is a "Billion dollar mistake"? Would you discuss the techniques to avoid it, such as the Null Object Pattern introduced by the GOF book, or Option types?
+
+
 * Many state that, in Object-Oriented Programming, Composition is often a better option than Inheritance. What's you opinion?
+
+
 * What is an Anti-corruption Layer?
+
+
 * Singleton is a design pattern that restricts the instantiation of a class to one single object. Writing a Thread-Safe Singleton class is not so obvious. Would you try?
+
+
 * The ability to change implementation without affecting clients is called Data Abstraction. Produce and example violating this property, then fix it.
+
+
 * Write a snippet of code violating the Don't Repeat Yourself (DRY) principle. Then, fix it.
+
+
 * How would you deal with Dependency Hell?
+
+
 * Is goto evil? You may have heard of the famous paper "Go To Statement Considered Harmful" by Edsger Dijkstra, in which he criticized the use of the `goto` statement and advocated structured programming instead. The use of `goto` has always been controversial, so much that even Dijkstra's letter was criticized with articles such as "'GOTO Considered Harmful' Considered Harmful". What's your opinion on the use of `goto`?
+
+
 * The robustness principle is a general design guideline for software that recommends "*Be conservative in what you send, be liberal in what you accept*". It is often reworded as "*Be a tolerant reader and a careful writer*". Would you like to discuss the rationale of this principle?
+
+
 * Separation of Concerns is a design principle for separating a computer program into distinct areas, each of ones addressing a separate concern. There are a lot of different mechanisms for achieving Separation of Concerns (use of objects, functions, modules, or patterns such as MVC and the like). Would you discuss this topic?
 
 
