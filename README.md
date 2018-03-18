@@ -95,7 +95,11 @@ Pros
 
 Cons.
 . Hard to setup. Active Record is designed to be simple to introduce with little configuration from the end user. With Data Mapper, the user has to invest more effort and think harder about how to configure the data mapping. 
-. 
+
+Guiding Principles. 
+  - If your application is simple and does not have much logic use an ORM based on Active Record.
+  - If your application needs to abstract domain objects from the database representation use an ORM based on DataMapper
+  - If performance is a concern, don't try to optimize the ORM queries and use pure SQL with a data mapper. 
 
 * Why it is often said that the introduction of `null` is a "Billion dollar mistake"? Would you discuss the techniques to avoid it, such as the Null Object Pattern introduced by the GOF book, or Option types?
 
