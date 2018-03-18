@@ -103,6 +103,125 @@ Guiding Principles.
 
 * Why it is often said that the introduction of `null` is a "Billion dollar mistake"? Would you discuss the techniques to avoid it, such as the Null Object Pattern introduced by the GOF book, or Option types?
 
+Null is a problem because it essentially subverts type checking at static time. Because any object can be a null and toss an exception when you attempt to use it, your object oriented code is basically a collection of unexploded bombs. 
+
+Naive programmers may think "you just have to do more error graceful handling", but that still assumes that one is aware of all the situations an object can be null - which is a less obvious endeavor.
+
+A summary of the reasons why Null is a mistake. 
+
+1. Null subverts types
+
+```java
+x.toUppercase()
+```
+
+With static type checking the compiler will succeed with `toUpperCase` is x is of type `String` or fail if x is of type `Socket`. But the problem is every type is actually of type T or null. So at runtime if x is null your program will explode. 
+
+2. Null is sloppy. 
+
+```java
+if (str == null || str.equals(""))
+
+```
+
+```c#
+if (string.IsNullOrEmpty(str))
+```
+
+^^ nuff said. because of what we discussed in 1. above, we have to do these checks to avoid explosions.
+
+3. Null is a special case. 
+
+```c++
+char *myChar = 0;
+std::cout << *myChar << std::endl; // runtime error
+
+```
+
+The reason why we allow ^^ is because NULL is a special case in strings. In all other scenarios like below
+
+```c++
+char *myChar = 123; // compile error
+std::cout << *myChar << std::endl;
+```
+
+ the compiler will scream about it. 
+
+4. Null makes poor APIs
+
+Some APIs will use NULL to simultaneously represent the absence of cached data (perhaps due to a timeout) and the absence of data in general. Don't do this, it's difficult to disambiguate and will lead to expensive recomputation to validate.
+
+5. Null exacerbates poor language decisions.
+
+```java
+int x = null; // compile error
+
+Integer i = null;
+int x = i; // runtime error
+
+```
+
+Nuff Said.
+
+6. Null is difficult to debug.
+
+Consider this example. 
+
+```c++
+#include <iostream>
+struct Foo {
+    int x;
+    void bar() {
+        std::cout << "La la la" << std::endl;
+    }
+    void baz() {
+        std::cout << x << std::endl;
+    }
+};
+int main() {
+    Foo *foo = NULL;
+    foo->bar(); // okay
+    foo->baz(); // crash
+}
+```
+
+Compiling with gcc, the first call will succeed and the second will fail. 
+
+In the first case, foo_bar is known at compile time and inlined.
+
+Howevef if we reqrite `Foo` as 
+```c++
+#include <iostream>
+struct Foo {
+    int x;
+    virtual void bar() {
+        std::cout << "La la la" << std::endl;
+    }
+    void baz() {
+        std::cout << x << std::endl;
+    }
+};
+int main() {
+    Foo *foo = NULL;
+    foo->bar(); // okay
+    foo->baz(); // crash
+}
+
+int main() {
+    Foo *foo = NULL;
+    foo->bar(); // crash
+    foo->baz(); // crash
+}
+```
+
+and call `main()` `foo->bar()` will crash. This is because the rewrite as virtual will force a v-table lookup, in this case the lookup will identify the type and the NULL ptr reference will fail.
+
+7. Null is not composable.
+
+
+Solutions
+
+We need an entity that contains information about (1) wether it contains any value and (2) the contained value. And it should be able to contain any type. This is essentially the optional type Option[T} popular in Java 8+, Swift, Scala etc.
 
 * Many state that, in Object-Oriented Programming, Composition is often a better option than Inheritance. What's you opinion?
 
