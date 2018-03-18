@@ -223,8 +223,11 @@ Solutions
 
 We need an entity that contains information about (1) wether it contains any value and (2) the contained value. And it should be able to contain any type. This is essentially the optional type Option[T} popular in Java 8+, Swift, Scala etc.
 
-* Many state that, in Object-Oriented Programming, Composition is often a better option than Inheritance. What's you opinion?
+A: Many state that, in Object-Oriented Programming, Composition is often a better option than Inheritance. What's you opinion?
 
+Composition *is* generally favored over inherirance because it gives the design more flexibility. it's more natural to build (and represent) a business domain out of various components rather than find commonality beteween them and create a hierarical relationship. For example, a gas pedal and a wheel share very few common traits - but are both vital components in a car. it's easier to compose a car out of their individual behaviors rather than find commonalities to derive from and inherit. Composition in general provides a more stable business domain in the long term as it is less prone to the quirks of the hierachy. 
+
+A common drawback of comoposition over inheritance is that methods provided by the composed compoennts may have to be implemented in the derived type even if they are forwarding methods. Inheritance in the other hand does not require all the base class methods to be implemented in the derived type. In this case, the derived class only needs to implement (override) the methods having different behavior from the base classes methods. This can require significantly less programming effort if the base class contains many methods for providing default behavior and only a few of them need to be overridden with the derived class. 
 
 * What is an Anti-corruption Layer?
 
