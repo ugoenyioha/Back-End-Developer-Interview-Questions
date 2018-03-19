@@ -231,6 +231,21 @@ A common drawback of comoposition over inheritance is that methods provided by t
 
 * What is an Anti-corruption Layer?
 
+An anti-corrupton layer implements a facade / adapter layer between different subsystems that do not share the same semantics. it translates requests that one subsystem makes to another subsystem. the pattern is used to ensure that an applications's design is not "corrupted" by dependencies on ouside domains. It's very popular to use this pattern to intregrate legacy systems with more modern equivalents. Expect to see this in use for gradual migrations where different features of a larger application are moved to a modern system over time. 
+
+#### The issues and considerations for an anti-corruption layer include
+
+- The layer may add latency to calls between two systems.
+- The anti-corruption layer is a new service that must be managed and maintained.
+- Consider how this layer will scale.
+- Consider if you need more than one anti-corrupton layer. You may want to decompose functionality into multiple services using different technologies / services. There could be good reasons to partitoin the anti-corruption layer.
+- Consider how the anti-corrupton layer will be managed in relation with other applications or services. How will it be integrated into the monitoring, release and management amd configuration process.
+- Maintain and monitor transaction and data consistency of this layer.
+- Consider if the layer needs to handle all communication between different subsystems or just a subset of features.
+- if the anti-corrupton layer is part of an application migration strategy, consider if it will be permanent or retired after all legacy functionalty has been migrated to the modern solution.
+
+Use the anti-corruption layer pattern when you intend to migrate a platform over multiple stages but need to maintain integration between new and legacy systems over time and/or if systems need to communicate over different semantics. 
+
 
 * Singleton is a design pattern that restricts the instantiation of a class to one single object. Writing a Thread-Safe Singleton class is not so obvious. Would you try?
 
