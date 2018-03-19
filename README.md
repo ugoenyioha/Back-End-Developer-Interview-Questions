@@ -300,22 +300,63 @@ object ThreadSafeSingleton {}
 Note: Scala used to have a thread safety issue. https://issues.scala-lang.org/browse/SI-3007 Now fixed. 
 
 Q: The ability to change implementation without affecting clients is called Data Abstraction. Produce and example violating this property, then fix it.
-
+A: 
 
 Q: Write a snippet of code violating the Don't Repeat Yourself (DRY) principle. Then, fix it.
-
+A: Easy. Left for reader.
 
 Q: How would you deal with Dependency Hell?
+A: Dependency Hell refers to the frustration of software users who have software packages which have dependencies on specific versions of a software package. 
 
+Assume two softare packages S1 and S2 have a dependency on library D. if S1 -> D1, meaning S1 depends on version 1 of D and S2 -> D2, if D1 and D2 are saved in a shared repo any incompaible 
+changes from D1 -> D2 will cause S1 to break. Incompatible changes might not be avoidable. As software libraries evolve and the domain becomes well understood, it may become necessary to introduce 
+new functionality / features / capabilities to a software package to enhance its functionality.
+
+^^ is a simpler representation. More examples of dependency hell exist/ 
+
+. Many Dependencies: Application requires many libraries - lengthy downloads and lots of space required.
+. Chained Dependencies: S1 -> D1 -> {L3 -> A1, C4 -> {F2, L2, X1}}. This happens a lot. Note the subtle representation of conflicts with C4 and D1. These conflicts may be inadvertent and if incompatible the application is unusable.
+. Circular Dependencies. A2 -> B1 -> A0
+
+#### Solutions
+. Version Numbering - use a version numbering system. Preferrably semantic numbering with minor numbers tracking compatible changes. Use major numbers to mark incompatible changes.
+- Private, per application versions / portable applications - localize all the application's dependencies so the application is in full charge of its dependencies
+  - Variations of this include: side by side installation eg. Global Assembly Cache in .NET. Here the operating system introduces facilities to gurantee the application receives the explicitly requested version of the shared library. 
+- Portable applications - The application is coded in a way that makes it portable. It's essentially an implementation of the strategies mentioned ^^
+- Smart Package Management - Package managers will perform smart upgrades e.g. Apt, Yum, Urpmi, Zypp, Portage, Pagman etc. They automatically resolve and upgrade dependencies and dependent programs when necessary.
 
 Q: Is goto evil? You may have heard of the famous paper "Go To Statement Considered Harmful" by Edsger Dijkstra, in which he criticized the use of the `goto` statement and advocated structured programming instead. The use of `goto` has always been controversial, so much that even Dijkstra's letter was criticized with articles such as "'GOTO Considered Harmful' Considered Harmful". What's your opinion on the use of `goto`?
 
+The reason why Goto is considered harmful is because goto, when used without consideration, severely breaks the logical structure of code leading to spaghetti code. 
+
+Now this is not to say all goto usage is bad. Goto usage where goto is only used to move forward in a function, and never backwards might be ok. This class of usage does not introduce a loop construct - and is always the simplest and clearest way to implement some behavior in C/C++ programs e.g. cleaning up and returning on error. 
+
+```pseudocode
+if (do_something() == ERR)  // Straight line
+    goto error;             // |
+if (do_something2() == ERR) // |
+    goto error;             // |
+if (do_something3() == ERR) // |
+    goto error;             // V
+if (do_something4() == ERR) // emphasizes normal control flow
+    goto error;
+```
+
+^^ is typical usage in linux.
 
 Q: The robustness principle is a general design guideline for software that recommends "*Be conservative in what you send, be liberal in what you accept*". It is often reworded as "*Be a tolerant reader and a careful writer*". Would you like to discuss the rationale of this principle?
 
+So the rationale of the robustness principle was from Jon Postel's early TCP specification paper. "TCP implementations should follow a general principle of robustness...." He meant that programs should send messages to other machines that conform to specifications but recieve messages that are non-conformat as long as the meaning is clear. This was at a time when networks were not as reliable and of course he was trying to optimize and reduce re-transmissions. 
+
+Today, the robustness principle isn't necessarily lauded. Implementations using this philosophy have largely been the cause of variant behavior across different implementations. IMO it is better to allow only explicitly specified messages that follow the confines of the specification. At worst if you decide to process, log the non-conformant message. The robustness principle has also been the cause of multiple security bugs in applicatins. 
+
+The robustness principle can also be pedantically rewritten as "to produce compatible functions be contravariant in the input type and covariant in the output type".
 
 Q: Separation of Concerns is a design principle for separating a computer program into distinct areas, each of ones addressing a separate concern. There are a lot of different mechanisms for achieving Separation of Concerns (use of objects, functions, modules, or patterns such as MVC and the like). Would you discuss this topic?
 
+Separation of concerns is a design principle that segments a computer program into distinction sections. Each section addresses a separate concern - the concern being information or a detail that must be handled by the computer program. it could be networking, the architecture of the processor, the type of data the applicaiton must handle etc. The advantage of approaching programs with a separation of concerns mindset is it allows computer programs to be modular and simpler to reason about. If done correctly, applications can be put together by composing differnt separate components to solve a more complex problem. Also the individual sections can be reused, developed and updated independently.
+
+One of the best examples demonstrating the success of a Separation of Concerns approach is the internet protocol stack.  
 
 ### [[↑]](#toc) <a name='design'>Questions about Code Design:</a>
 
