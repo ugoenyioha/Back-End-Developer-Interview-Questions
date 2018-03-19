@@ -229,9 +229,9 @@ Composition *is* generally favored over inherirance because it gives the design 
 
 A common drawback of comoposition over inheritance is that methods provided by the composed compoennts may have to be implemented in the derived type even if they are forwarding methods. Inheritance in the other hand does not require all the base class methods to be implemented in the derived type. In this case, the derived class only needs to implement (override) the methods having different behavior from the base classes methods. This can require significantly less programming effort if the base class contains many methods for providing default behavior and only a few of them need to be overridden with the derived class. 
 
-* What is an Anti-corruption Layer?
+Q: What is an Anti-corruption Layer?
 
-An anti-corrupton layer implements a facade / adapter layer between different subsystems that do not share the same semantics. it translates requests that one subsystem makes to another subsystem. the pattern is used to ensure that an applications's design is not "corrupted" by dependencies on ouside domains. It's very popular to use this pattern to intregrate legacy systems with more modern equivalents. Expect to see this in use for gradual migrations where different features of a larger application are moved to a modern system over time. 
+A: An anti-corrupton layer implements a facade / adapter layer between different subsystems that do not share the same semantics. it translates requests that one subsystem makes to another subsystem. the pattern is used to ensure that an applications's design is not "corrupted" by dependencies on ouside domains. It's very popular to use this pattern to intregrate legacy systems with more modern equivalents. Expect to see this in use for gradual migrations where different features of a larger application are moved to a modern system over time. 
 
 #### The issues and considerations for an anti-corruption layer include
 
@@ -247,25 +247,74 @@ An anti-corrupton layer implements a facade / adapter layer between different su
 Use the anti-corruption layer pattern when you intend to migrate a platform over multiple stages but need to maintain integration between new and legacy systems over time and/or if systems need to communicate over different semantics. 
 
 
-* Singleton is a design pattern that restricts the instantiation of a class to one single object. Writing a Thread-Safe Singleton class is not so obvious. Would you try?
+Q: Singleton is a design pattern that restricts the instantiation of a class to one single object. Writing a Thread-Safe Singleton class is not so obvious. Would you try?
+
+#### Java
+
+```java
+package com.usableapps.singleton;
+
+public class ThreadSafeSingleton {
+
+    private static ThreadSafeSingleton instance;
+    
+    private ThreadSafeSingleton(){}
+
+    /**
+     * This is syncronyzed and lazy. Only when getInstance is called will the caller
+     * get access to the singleton.
+     */    
+    public static synchronized ThreadSafeSingleton getInstance(){
+        if(instance == null){
+            instance = new ThreadSafeSingleton();
+        }
+        return instance;
+    }
+
+    /**
+     * The problem with the approach above is syncronyzed on the function is expensive. 
+     * If the instance is already initialized there's no need to lock the entire object.
+     * so we use double chained locking to ensure only one instance of the singleton class is created.
+     */
+    public static ThreadSafeSingleton getInstanceUsingDoubleLocking(){
+      if(instance == null){ // first check no locking
+          synchronized (ThreadSafeSingleton.class) {
+              if(instance == null){ // second check
+                  instance = new ThreadSafeSingleton();
+              }
+          }
+      }
+      return instance;
+    }
+}
+```
+
+#### Scala
+
+```scala
+
+object ThreadSafeSingleton {}
+
+```
+
+Note: Scala used to have a thread safety issue. https://issues.scala-lang.org/browse/SI-3007 Now fixed. 
+
+Q: The ability to change implementation without affecting clients is called Data Abstraction. Produce and example violating this property, then fix it.
 
 
-* The ability to change implementation without affecting clients is called Data Abstraction. Produce and example violating this property, then fix it.
+Q: Write a snippet of code violating the Don't Repeat Yourself (DRY) principle. Then, fix it.
 
 
-* Write a snippet of code violating the Don't Repeat Yourself (DRY) principle. Then, fix it.
+Q: How would you deal with Dependency Hell?
 
 
-* How would you deal with Dependency Hell?
+Q: Is goto evil? You may have heard of the famous paper "Go To Statement Considered Harmful" by Edsger Dijkstra, in which he criticized the use of the `goto` statement and advocated structured programming instead. The use of `goto` has always been controversial, so much that even Dijkstra's letter was criticized with articles such as "'GOTO Considered Harmful' Considered Harmful". What's your opinion on the use of `goto`?
 
 
-* Is goto evil? You may have heard of the famous paper "Go To Statement Considered Harmful" by Edsger Dijkstra, in which he criticized the use of the `goto` statement and advocated structured programming instead. The use of `goto` has always been controversial, so much that even Dijkstra's letter was criticized with articles such as "'GOTO Considered Harmful' Considered Harmful". What's your opinion on the use of `goto`?
+Q: The robustness principle is a general design guideline for software that recommends "*Be conservative in what you send, be liberal in what you accept*". It is often reworded as "*Be a tolerant reader and a careful writer*". Would you like to discuss the rationale of this principle?
 
 
-* The robustness principle is a general design guideline for software that recommends "*Be conservative in what you send, be liberal in what you accept*". It is often reworded as "*Be a tolerant reader and a careful writer*". Would you like to discuss the rationale of this principle?
-
-
-* Separation of Concerns is a design principle for separating a computer program into distinct areas, each of ones addressing a separate concern. There are a lot of different mechanisms for achieving Separation of Concerns (use of objects, functions, modules, or patterns such as MVC and the like). Would you discuss this topic?
+Q: Separation of Concerns is a design principle for separating a computer program into distinct areas, each of ones addressing a separate concern. There are a lot of different mechanisms for achieving Separation of Concerns (use of objects, functions, modules, or patterns such as MVC and the like). Would you discuss this topic?
 
 
 ### [[↑]](#toc) <a name='design'>Questions about Code Design:</a>
